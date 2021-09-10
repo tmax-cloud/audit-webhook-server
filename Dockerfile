@@ -1,4 +1,4 @@
-FROM golang:1.15-alpine as builder
+FROM golang:1.15 as builder
 
 WORKDIR /go/src
 
@@ -10,10 +10,10 @@ RUN go mod download
 # Copy source files and Build
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o manager main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-s' -o main .
 
 # Use light-weight base image
-FROM gcr.io/distroless/static:nonroot
+FROM golang:1.15-alpine
 WORKDIR /go/src
 COPY --from=builder /go/src .
 
