@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-webhook-server-service
+  namespace: hypercloud5-system
+spec:
+  ports:
+  - port: 80
+    targetPort: https
+  selector:
+    hypercloud5: audit-webhook-server
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-webhook-server
+  namespace: hypercloud5-system
+  labels:
+    hypercloud5: audit-webhook-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      hypercloud5: audit-webhook-server
+  template:
+    metadata:
+      name: audit-webhook-server
+      namespace: hypercloud5-system
+      labels:
+        hypercloud5: audit-webhook-server
+    spec:
+      serviceAccount: default #hypercloud5-admin
+      containers:
+        - name: audit-webhook-server
+          image: {AUDIT_WEBHOOK_SERVER_IMAGE}:{AUDIT_WEBHOOK_SERVER_TAG}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Asia/Seoul"
+            - name: GODEBUG
+              value: "x509ignoreCN=0"  
+          ports:
+          - containerPort: 80
+            name: http 
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "300Mi"
+            requests:
+              cpu: "50m"
+              memory: "50Mi"
+#          volumeMounts:
+#          - name: audit-webhook-server-certs
+#            mountPath: /run/secrets/tls
+#            readOnly: true
+#      volumes:
+#      - name: audit-webhook-server-certs
+#        secret:
+#          secretName: audit-webhook-server-certs

@@ -18,4 +18,4 @@ WORKDIR /go/src
 COPY --from=builder /go/src .
 
 USER root
-ENTRYPOINT ["/main"]
+ENTRYPOINT ["/go/src/main"]
