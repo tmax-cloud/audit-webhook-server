@@ -39,7 +39,7 @@ func serveAudit(w http.ResponseWriter, r *http.Request) {
 func serveTest(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		util.SetResponse(r, "Hello Audit Test", nil, http.StatusOK)
+		util.SetResponse(w, "Hello Audit Test", nil, http.StatusOK)
 	case http.MethodPost:
 	case http.MethodPut:
 	case http.MethodDelete:
