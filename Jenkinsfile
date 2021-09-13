@@ -8,7 +8,7 @@ node {
     }
 }
 
-void DisApiServer() {
+void DisAuditWebhookServer() {
     def gitHubBaseAddress = "github.com"
     def gitAddress = "${gitHubBaseAddress}/tmax-cloud/audit-webhook-server.git"
     def homeDir = "/var/lib/jenkins/workspace/audit-webhook-server"
