@@ -46,7 +46,7 @@ void DisAuditWebhookServer() {
             preVersion = sh(script:"sudo git describe --tags --abbrev=0", returnStdout: true)
             preVersion = preVersion.substring(1)
             echo "preVersion of audit-webhook-server : ${preVersion}"
-            sh "sudo sh ${scriptHome}/audit-webhook-server.sh ${version} ${preVersion}"
+            sh "sudo sh ${scriptHome}/audit-webhook-server-changelog.sh ${version} ${preVersion}"
         }
 
         stage('Audit-Webhook-Server (git push)'){
