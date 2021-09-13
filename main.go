@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-
 	util.UpdateAuditResourceList()
 
 	mux := http.NewServeMux()
