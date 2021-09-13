@@ -6,7 +6,7 @@ metadata:
 spec:
   ports:
   - port: 80
-    targetPort: https
+    targetPort: http # https
   selector:
     hypercloud5: audit-webhook-server
   type: ClusterIP
@@ -43,8 +43,8 @@ spec:
             - name: GODEBUG
               value: "x509ignoreCN=0"  
           ports:
-          - containerPort: 80
-            name: http 
+          - containerPort: 80 # 443
+            name: http # https
           resources:
             limits:
               cpu: "300m"

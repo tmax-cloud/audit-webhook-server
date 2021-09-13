@@ -9,8 +9,17 @@ import (
 )
 
 func main() {
+
+	util.UpdateAuditResourceList()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/audit", serveAudit)
+	mux.HandleFunc("/audit/member_suggestions", serveAuditMemberSuggestions)
+	mux.HandleFunc("/audit/batch", serveAuditBatch)
+	mux.HandleFunc("/audit/resources", serveAuditResources)
+	mux.HandleFunc("/audit/verb", serveAuditVerb)
+	mux.HandleFunc("/audit/websocket", serveAuditWss)
+
 	mux.HandleFunc("/test", serveTest)
 
 	klog.Info("Starting Audit Webhook server...")
@@ -34,6 +43,45 @@ func serveAudit(w http.ResponseWriter, r *http.Request) {
 	default:
 		//error
 	}
+}
+
+func serveAuditVerb(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	switch r.Method {
+	case http.MethodGet:
+		audit.ListAuditVerb(w, r)
+	default:
+		//error
+	}
+}
+
+func serveAuditResources(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	switch r.Method {
+	case http.MethodGet:
+		audit.ListAuditResource(w, r)
+	default:
+		//error
+	}
+}
+
+func serveAuditMemberSuggestions(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	switch r.Method {
+	case http.MethodGet:
+		audit.MemberSuggestions(w, r)
+	default:
+	}
+}
+
+func serveAuditBatch(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	audit.AddAuditBatch(w, r)
+}
+
+func serveAuditWss(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	audit.ServeWss(w, r)
 }
 
 func serveTest(w http.ResponseWriter, r *http.Request) {
