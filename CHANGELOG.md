@@ -1,6 +1,22 @@
 # Audit-Webhook-Server changelog!!
 All notable changes to this project will be documented in this file.
 
+<!-------------------- v5.0.1.1 start -------------------->
+
+## Audit-Webhook-Server 5.0.1.1 (2021. 09. 14. (화) 18:46:35 KST)
+
+### Added
+  - [feat] 젠킨스에 release file upload 추가 by Seungwon Lee
+  - [feat] hypertable 적용 by Seungwon Lee
+
+### Changed
+
+### Fixed
+
+### CRD yaml
+
+### Etc
+
 <!-------------------- v5.0.1.0 start -------------------->
 
 ## Audit-Webhook-Server 5.0.1.0 (2021. 09. 14. (화) 15:08:19 KST)
