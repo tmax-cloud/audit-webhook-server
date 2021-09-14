@@ -102,5 +102,7 @@ metadata:
 data:
   INIT_DB_SQL: |-
     CREATE TABLE AUDIT (ID VARCHAR(64) NOT NULL, USERNAME VARCHAR(255), USERAGENT VARCHAR(255), NAMESPACE VARCHAR(255), APIGROUP VARCHAR(255), APIVERSION VARCHAR(32), RESOURCE VARCHAR(64), NAME VARCHAR(255), STAGE VARCHAR(32), STAGETIMESTAMP TIMESTAMP NOT NULL, VERB VARCHAR(32), CODE INT, STATUS VARCHAR(255), REASON VARCHAR(255), MESSAGE VARCHAR(255));
-    CREATE INDEX TIME_INDEX ON AUDIT (STAGETIMESTAMP);
+    SELECT create_hypertable('audit', 'stagetimestamp', chunk_time_interval => INTERVAL '1 days', if_not_exists => TRUE);
+    SELECT add_retention_policy('audit', INTERVAL '7 days', if_not_exists => TRUE);
+    SELECT alter_job(1000, schedule_interval => INTERVAL '1 hours');
     ALTER DATABASE postgres set idle_in_transaction_session_timeout = '3min';
