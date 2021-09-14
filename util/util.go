@@ -20,9 +20,11 @@ const (
 	QUERY_PARAMETER_USER_GROUP = "userGroup"
 )
 
-var Clientset *kubernetes.Clientset
-var config *restclient.Config
-var AuditResourceList []string
+var (
+	Clientset         *kubernetes.Clientset
+	config            *restclient.Config
+	AuditResourceList []string
+)
 
 func init() {
 	// creates the in-cluster config

@@ -35,13 +35,18 @@ spec:
       serviceAccount: default #hypercloud5-admin
       containers:
         - name: audit-webhook-server
-          image: {AUDIT_WEBHOOK_SERVER_IMAGE}:{AUDIT_WEBHOOK_SERVER_TAG}
+          image: tmaxcloudck/audit-webhook-server:{AUDIT_WEBHOOK_SERVER_VERSION}
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
               value: "Asia/Seoul"
             - name: GODEBUG
               value: "x509ignoreCN=0"  
+            - name: timescaledb_password
+              valueFrom:
+                secretKeyRef:
+                  name: timescaledb-secret
+                  key: POSTGRES_PASSWORD
           ports:
           - containerPort: 80 # 443
             name: http # https

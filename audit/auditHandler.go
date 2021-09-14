@@ -255,14 +255,6 @@ func queryBuilder(param urlParam) string {
 	var b strings.Builder
 	b.WriteString("select *, count(*) over() as full_count from audit where 1=1 ")
 
-	// if startTime != "" && endTime != "" {
-	// 	b.WriteString("and stagetimestamp between to_timestamp(")
-	// 	b.WriteString(startTime)
-	// 	b.WriteString(") and to_timestamp(")
-	// 	b.WriteString(endTime)
-	// 	b.WriteString(")")
-	// }
-
 	////////////////////////////////////////////////////////////////////////////////////////
 	// b.WriteString(") as sub where 1=1 ")
 

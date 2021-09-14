@@ -4,12 +4,15 @@ import (
 	"net/http"
 
 	"github.com/tmax-cloud/audit-webhook-server/audit"
+	"github.com/tmax-cloud/audit-webhook-server/dataFactory"
 	"github.com/tmax-cloud/audit-webhook-server/util"
 	"k8s.io/klog"
 )
 
 func main() {
 	util.UpdateAuditResourceList()
+	dataFactory.CreateConnection()
+	//flag.StringVar(&dataFactory.DBPassWordPath, "dbPassword", "/run/secrets/timescaledb/password", "Timescaledb Server Password")
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/audit", serveAudit)
