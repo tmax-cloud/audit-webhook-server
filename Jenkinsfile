@@ -67,6 +67,7 @@ void DisAuditWebhookServer() {
         }
 
         stage('Audit-Webhook-Server (gh release upload)'){
+            sh "gh auth login -w \"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\""
             sh "gh release create v${version} -t v${version} -n \"Release v${version}\""
             sh "gh release upload v5.0.1.0 install-yaml/01_timescaledb.yaml"
             sh "gh release upload v5.0.1.0 install-yaml/02_audit-deployment.yaml"
