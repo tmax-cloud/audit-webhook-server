@@ -64,6 +64,12 @@ void DisAuditWebhookServer() {
             sh "git remote set-url origin https://${githubUserToken}@github.com/tmax-cloud/audit-webhook-server.git"
             sh "sudo git push -u origin +master"
             sh "sudo git push origin v${version}"
+        }
+
+        stage('Audit-Webhook-Server (gh release upload)'){
+            sh "gh release create v${version} -t v${version} -n \"Release v${version}\""
+            sh "gh release upload v5.0.1.0 install-yaml/01_timescaledb.yaml"
+            sh "gh release upload v5.0.1.0 install-yaml/02_audit-deployment.yaml"
 
             sh "git fetch --all"
             sh "git reset --hard origin/master"
