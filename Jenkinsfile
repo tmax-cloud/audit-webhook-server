@@ -18,6 +18,7 @@ void DisAuditWebhookServer() {
     def userName = "aldlfkahs"
     def userEmail = "seungwon_lee@tmax.co.kr"
     def githubUserToken = "${params.githubUserToken}"
+    def GITHUB_TOKEN = "${params.githubUserToken}"
 
     dir(homeDir){
         stage('Audit-Webhook-Server (git pull)') {
@@ -36,41 +37,40 @@ void DisAuditWebhookServer() {
             sh "git pull origin master"
         }
 
-        stage('Audit-Webhook-Server (image build & push)'){
-            sh "sudo docker build --tag tmaxcloudck/audit-webhook-server:${imageTag} ."
-            sh "sudo docker push tmaxcloudck/audit-webhook-server:${imageTag}"
-            sh "sudo docker rmi tmaxcloudck/audit-webhook-server:${imageTag}"
-        }
+        // stage('Audit-Webhook-Server (image build & push)'){
+        //     sh "sudo docker build --tag tmaxcloudck/audit-webhook-server:${imageTag} ."
+        //     sh "sudo docker push tmaxcloudck/audit-webhook-server:${imageTag}"
+        //     sh "sudo docker rmi tmaxcloudck/audit-webhook-server:${imageTag}"
+        // }
 
-        stage('Audit-Webhook-Server (make change log)'){
-            preVersion = sh(script:"sudo git describe --tags --abbrev=0", returnStdout: true)
-            preVersion = preVersion.substring(1)
-            echo "preVersion of audit-webhook-server : ${preVersion}"
-            sh "sudo sh ${scriptHome}/audit-webhook-server-changelog.sh ${version} ${preVersion}"
-        }
+        // stage('Audit-Webhook-Server (make change log)'){
+        //     preVersion = sh(script:"sudo git describe --tags --abbrev=0", returnStdout: true)
+        //     preVersion = preVersion.substring(1)
+        //     echo "preVersion of audit-webhook-server : ${preVersion}"
+        //     sh "sudo sh ${scriptHome}/audit-webhook-server-changelog.sh ${version} ${preVersion}"
+        // }
 
-        stage('Audit-Webhook-Server (git push)'){
-            sh "git checkout master"
+        // stage('Audit-Webhook-Server (git push)'){
+        //     sh "git checkout master"
 
-            sh "git config --global user.name ${userName}"
-            sh "git config --global user.email ${userEmail}"
-            sh "git config --global credential.helper store"
-            sh "git add -A"
+        //     sh "git config --global user.name ${userName}"
+        //     sh "git config --global user.email ${userEmail}"
+        //     sh "git config --global credential.helper store"
+        //     sh "git add -A"
 
-            def commitMsg = "[Distribution] Release commit for Audit-Webhook-Server-v${version}"
-            sh (script: "git commit -m \"${commitMsg}\" || true")
-            sh "git tag v${version}"
+        //     def commitMsg = "[Distribution] Release commit for Audit-Webhook-Server-v${version}"
+        //     sh (script: "git commit -m \"${commitMsg}\" || true")
+        //     sh "git tag v${version}"
 
-            sh "git remote set-url origin https://${githubUserToken}@github.com/tmax-cloud/audit-webhook-server.git"
-            sh "sudo git push -u origin +master"
-            sh "sudo git push origin v${version}"
-        }
+        //     sh "git remote set-url origin https://${githubUserToken}@github.com/tmax-cloud/audit-webhook-server.git"
+        //     sh "sudo git push -u origin +master"
+        //     sh "sudo git push origin v${version}"
+        // }
 
         stage('Audit-Webhook-Server (gh release upload)'){
-            sh "export GITHUB_TOKEN=${githubUserToken}"
             sh "gh release create v${version} -t v${version} -n \"Release v${version}\""
-            sh "gh release upload v5.0.1.0 install-yaml/01_timescaledb.yaml"
-            sh "gh release upload v5.0.1.0 install-yaml/02_audit-deployment.yaml"
+            sh "gh release upload v${version} install-yaml/01_timescaledb.yaml"
+            sh "gh release upload v${version} install-yaml/02_audit-deployment.yaml"
 
             sh "git fetch --all"
             sh "git reset --hard origin/master"
