@@ -58,29 +58,15 @@ spec:
       serviceAccountName: hypercloud5-admin    
       volumes:
       - name: data
-        persistentVolumeClaim:
-          claimName: timescaledb-data
+        hostPath:
+          path: /var/log/audit-timescaledb
+          type: DirectoryOrCreate
       - name: initdbsql
         configMap:
           name: timescaledb-init-config
           items:
           - key: INIT_DB_SQL
             path: init-db.sql
----
-
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: timescaledb-data
-  namespace: hypercloud5-system
-spec:
-  #storageClassName: csi-cephfs-sc
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-
 ---
 
 apiVersion: v1
@@ -101,6 +87,7 @@ metadata:
   namespace: hypercloud5-system
 data:
   INIT_DB_SQL: |-
+    CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
     CREATE TABLE AUDIT (ID VARCHAR(64) NOT NULL, USERNAME VARCHAR(255), USERAGENT VARCHAR(255), NAMESPACE VARCHAR(255), APIGROUP VARCHAR(255), APIVERSION VARCHAR(32), RESOURCE VARCHAR(64), NAME VARCHAR(255), STAGE VARCHAR(32), STAGETIMESTAMP TIMESTAMP NOT NULL, VERB VARCHAR(32), CODE INT, STATUS VARCHAR(255), REASON VARCHAR(255), MESSAGE VARCHAR(255));
     SELECT create_hypertable('audit', 'stagetimestamp', chunk_time_interval => INTERVAL '1 days', if_not_exists => TRUE);
     SELECT add_retention_policy('audit', INTERVAL '7 days', if_not_exists => TRUE);
