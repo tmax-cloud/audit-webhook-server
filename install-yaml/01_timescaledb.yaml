@@ -55,7 +55,7 @@ spec:
               name: data
             - mountPath: /docker-entrypoint-initdb.d
               name: initdbsql
-      serviceAccountName: hypercloud5-admin    
+      serviceAccountName: default 
       volumes:
       - name: data
         hostPath:

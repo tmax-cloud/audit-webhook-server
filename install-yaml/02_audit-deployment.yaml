@@ -6,7 +6,7 @@ metadata:
 spec:
   ports:
   - port: 80
-    targetPort: http # https
+    targetPort: http
   selector:
     hypercloud5: audit-webhook-server
   type: ClusterIP
@@ -32,7 +32,7 @@ spec:
       labels:
         hypercloud5: audit-webhook-server
     spec:
-      serviceAccount: default #hypercloud5-admin
+      serviceAccount: default
       containers:
         - name: audit-webhook-server
           image: tmaxcloudck/audit-webhook-server:{AUDIT_WEBHOOK_SERVER_VERSION}
@@ -48,8 +48,8 @@ spec:
                   name: timescaledb-secret
                   key: POSTGRES_PASSWORD
           ports:
-          - containerPort: 80 # 443
-            name: http # https
+          - containerPort: 80
+            name: http
           resources:
             limits:
               cpu: "300m"
@@ -57,11 +57,3 @@ spec:
             requests:
               cpu: "50m"
               memory: "50Mi"
-#          volumeMounts:
-#          - name: audit-webhook-server-certs
-#            mountPath: /run/secrets/tls
-#            readOnly: true
-#      volumes:
-#      - name: audit-webhook-server-certs
-#        secret:
-#          secretName: audit-webhook-server-certs
