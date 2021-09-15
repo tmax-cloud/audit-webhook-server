@@ -1,6 +1,20 @@
 # Audit-Webhook-Server changelog!!
 All notable changes to this project will be documented in this file.
 
+<!-------------------- v5.0.1.2 start -------------------->
+
+## Audit-Webhook-Server 5.0.1.2 (2021. 09. 15. (수) 11:04:04 KST)
+
+### Added
+
+### Changed
+
+### Fixed
+
+### CRD yaml
+
+### Etc
+
 <!-------------------- v5.0.1.1 start -------------------->
 
 ## Audit-Webhook-Server 5.0.1.1 (2021. 09. 14. (화) 18:46:35 KST)
