@@ -18,7 +18,6 @@ void DisAuditWebhookServer() {
     def userName = "aldlfkahs"
     def userEmail = "seungwon_lee@tmax.co.kr"
     def githubUserToken = "${params.githubUserToken}"
-    def GITHUB_TOKEN = "${params.githubUserToken}"
 
     dir(homeDir){
         stage('Audit-Webhook-Server (git pull)') {
@@ -68,6 +67,7 @@ void DisAuditWebhookServer() {
         // }
 
         stage('Audit-Webhook-Server (gh release upload)'){
+            sh "export GITHUB_TOKEN=\"${params.githubUserToken}\""
             sh "gh release create v${version} -t v${version} -n \"Release v${version}\""
             sh "gh release upload v${version} install-yaml/01_timescaledb.yaml"
             sh "gh release upload v${version} install-yaml/02_audit-deployment.yaml"
