@@ -13,6 +13,8 @@ import (
 	auditDataFactory "github.com/tmax-cloud/audit-webhook-server/dataFactory"
 	"github.com/tmax-cloud/audit-webhook-server/util"
 	corev1 "k8s.io/api/core/v1"
+
+	//eventv1 "k8s.io/api/events/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/apis/audit"
 	"k8s.io/klog"

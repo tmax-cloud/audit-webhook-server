@@ -3,8 +3,10 @@ package dataFactory
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	pgx "github.com/jackc/pgx/v4"
 
@@ -33,6 +35,35 @@ func Insert(items []audit.Event) {
 	//load insert statements into batch queue
 
 	for _, event := range items {
+		if event.ObjectRef.Resource == "events" {
+			if event.RequestObject == nil {
+				klog.Errorf("No request body for event")
+			} else if strings.Contains(string(event.RequestObject.Raw), "\"hypercloud\":\"claim\"") {
+				var body map[string]interface{}
+				if err := json.Unmarshal([]byte(string(event.RequestObject.Raw)), &body); err != nil {
+					fmt.Errorf(err.Error())
+					continue
+				}
+
+				batch.Queue(queryInsertTimeseriesData, event.AuditID,
+					valueFromKey(body, "reportingController"),
+					event.UserAgent,
+					NewNullString(valueFromKey(body, "metadata", "namespace")),
+					NewNullString("claim.tmax.io"),
+					NewNullString("v1alpha1"),
+					parseClaim(valueFromKey(body, "metadata", "name")),
+					valueFromKey(body, "reportingInstance"),
+					event.Stage,
+					event.StageTimestamp.Time,
+					valueFromKey(body, "action"),
+					event.ResponseStatus.Code,
+					event.ResponseStatus.Status,
+					valueFromKey(body, "reason"),
+					event.ResponseStatus.Message)
+			}
+			continue
+		}
+
 		batch.Queue(queryInsertTimeseriesData, event.AuditID,
 			event.User.Username,
 			event.UserAgent,
@@ -188,4 +219,20 @@ func NewNullString(s string) sql.NullString {
 		String: s,
 		Valid:  true,
 	}
+}
+
+func valueFromKey(r map[string]interface{}, key ...string) string {
+	if len(key) == 1 {
+		return r[key[0]].(string)
+	} else if len(key) == 2 {
+		return r[key[0]].(map[string]interface{})[key[1]].(string)
+	} else {
+		fmt.Errorf("Not Support for 3 or more parameters.")
+	}
+	return ""
+}
+
+func parseClaim(str string) string {
+	s := strings.Split(str, "-")
+	return s[0]
 }
