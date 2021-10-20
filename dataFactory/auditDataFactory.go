@@ -44,9 +44,10 @@ func Insert(items []audit.Event) {
 					fmt.Errorf(err.Error())
 					continue
 				}
-
+				email := valueFromKey(body, "reportingController")
+				email = strings.Replace(email, "-", "@", -1)
 				batch.Queue(queryInsertTimeseriesData, event.AuditID,
-					valueFromKey(body, "reportingController"),
+					email,
 					event.UserAgent,
 					NewNullString(valueFromKey(body, "metadata", "namespace")),
 					NewNullString("claim.tmax.io"),
